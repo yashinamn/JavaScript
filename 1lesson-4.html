@@ -1,14 +1,15 @@
 <meta charset="UTF-8">
 <script>
+'use strict";
 
-alert('Введите пожалуйста все цифры номера билета по порядку');
+let ticketNumber = +prompt('Введите пожалуйста номер билета');
 
-let n1 = +prompt("первая цифра");
-let n2 = +prompt("вторая цифра");
-let n3 = +prompt("третяя цифра");
-let n4 = +prompt("четвертая цифра");
-let n5 = +prompt("пятая цифра");
-let n6 = +prompt("шестая цифра");
+let n1 = ticketNumber % 10;
+let n2 = parseInt((ticketNumber % 100) / 10);
+let n3 = parseInt((ticketNumber % 1000) / 100);
+let n4 = parseInt((ticketNumber % 10000) / 1000);
+let n5 = parseInt((ticketNumber % 100000) / 10000);
+let n6 = parseInt((ticketNumber % 1000000) / 100000);
 
 let sum1 = n1 + n2 + n3;
 let sum2 = n4 + n5 + n6;
@@ -16,7 +17,7 @@ let sum2 = n4 + n5 + n6;
 if (sum1 === sum2) {
   alert("Поздравляю! Ваш билет счастливый!");
 } else {
-  alert("К сожалению билет не счастливый")
+  alert("К сожалению билет не счастливый");
 }
 
 </script>
