@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        "use strict";
+
+        /**
+         *ФУНКЦИЯ сложения
+         */
+         function sum(a, b) {
+            return a + b;
+        }
+        
+        /**
+         *ФУНКЦИЯ вычитания
+         */
+        function differ(a, b) {
+            return a - b;
+        }
+
+        /**
+         *ФУНКЦИЯ умножения
+         */
+        function multi(a, b) {
+            return a * b;
+        }
+
+        /**
+         *ФУНКЦИЯ деления
+         */
+        function division(a, b) {
+            return a / b;
+        }
+
+        /**
+        *ФУНКЦИЯ с тремя параметрами. В зависимости от
+        переданного значения "операции" функция выполняет одну из арифметических операций
+        и возвращает полученное значение.
+        * arg1, arg2 – значения аргументов. 
+        * operation – строка с названием операции.
+        */
+        function mathAperation(arg1, arg2, operation) {
+            switch (operation) {
+                case 'сложение':
+                case 'сумма':
+                    return sum(arg1, arg2);
+                case 'вычитание':
+                case 'разность':
+                    return differ(arg1, arg2);
+                case 'умножение':
+                case 'произведение':
+                    return multi(arg1, arg2);
+                case 'деление':
+                case 'частное':
+                    return division(arg1, arg2);
+                default:
+                    return false;
+            }                
+        }
+
+        let n1 = +prompt('Введите первое число');
+        let n2 = +prompt('Введите второе число');
+        let operation = prompt('какую операцию необходимо выполнить с числами?');
+
+        alert (`${operation} чисел ${n1} и ${n2} будет равно ${mathAperation(n1, n2, operation)}`);
+
+    </script>
+</body>
+
+</html>

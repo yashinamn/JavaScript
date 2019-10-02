@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        "use strict";
+
+        let a = +prompt("Введите целочисленное значение переменной а");
+        let b = +prompt("Введите целочисленное значение переменной б");
+/**
+*функция производит мат операции с заданными параметрами а и б
+*/
+        function myFunc(a, b) {
+            if (a >= 0 && b >= 0) {
+                return console.log(a - b);
+            } else if (a < 0 && b < 0) {
+                return console.log(a * b);
+            } else {
+                return console.log(a + b);
+            }
+        }
+        
+        myFunc(a, b);
+
+
+    </script>
+</body>
+
+</html>
