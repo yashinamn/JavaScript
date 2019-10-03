@@ -12,18 +12,25 @@
     <script>
         "use strict";
 
-    function endValute(s) {
-        if ((s % 10) === 1) {
-            return 'рубль';
+    function endValute(s, one, two, five) {
+        let lastTwo = s % 100;
+        if (lastTwo >= 5 && lastTwo <= 20) {
+            return five;
+        } else if ((s % 10) === 1) {
+            return one;
         } else if ((s % 10 > 1) && (s % 10 < 5)) {
-            return 'рубля';
+            return two;
         } else {
-            return 'рублей';
+            return five;
         }
     }
 
     let sum = +prompt('Введите сумму вклада в рублях');
-    alert(`Ваша сумма в ${sum} ${endValute(sum)} успешно зачислена.`);
+    alert(`Ваша сумма в ${sum} ${endValute(sum, 'рубль', 'рубля', 'рублей' )} успешно зачислена.`);
+
+    sum = +prompt('Введите сумму вклада в долларах');
+    alert(`Ваша сумма в ${sum} ${endValute(sum, 'доллар', 'доллара', 'долларов' )} успешно зачислена.`);
+
 
     </script>
 </body>
