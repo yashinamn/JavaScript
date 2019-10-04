@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Домашка</title>
+</head>
+
+<body>
+    <script>
+        "use strict";
+
+        /** 5*. Дан массив (создать такой же, с такими же значениями):
+        ```
+        Задания:
+        1 Найти массив, у которого сумма всех чисел максимальна, вывести в console.log
+        индекс этого массива.
+        2 Получить и вывести в console.log минимальное значение найденное в массиве,
+        который мы получили в первом пункте.
+        */
+
+        const arr = [
+            [2, 4, 6],
+            [1, 5, 10],
+            [7, 4, 1],
+        ];
+
+        function sumArr(array) {
+            let sumArray = 0;
+            for (let i = 0;  i < array.length; sumArray = sumArray + array[i], i++ );
+            return sumArray;
+        }
+
+        function findMaxArray(arr1, arr2, arr3) {
+            if ((sumArr(arr1) > sumArr(arr2)) && (sumArr(arr1) > sumArr(arr3))) {
+                return arr1;
+            } else if ((sumArr(arr1) > sumArr(arr2)) && (sumArr(arr1) < sumArr(arr3))) {
+                return arr3;
+            } else {
+                return arr2;
+            }
+        }
+
+        function minElemArray(array) {
+            if (array[0] < array[1] && array[0] < array[2]) {
+                return array[0];
+            } else if (array[0] < array[1] && array[0] > array[2]) {
+                return array[2];
+            } else {
+                return array[1];
+            }
+        }
+
+let maxArray = findMaxArray(arr[0], arr[1], arr[2]);
+let minElemMaxArr = minElemArray(maxArray);
+
+        console.log(`массив, у которого сумма всех чисел максимальна ${maxArray}`);
+        console.log(`минимальный элемент этого массива ${minElemMaxArr}`);
+        
+
+
+      /*const sumArr1 = sumArr(arr[0]);
+        const sumArr2 = sumArr(arr[1]);
+        const sumArr3 = sumArr(arr[2]);
+
+        console.log(sumArr1);
+        console.log(sumArr2);
+        console.log(sumArr3);*/
+        
+    </script>
+</body>
+
+</html>
