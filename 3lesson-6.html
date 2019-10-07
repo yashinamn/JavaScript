@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Домашка</title>
+</head>
+
+<body>
+    <script>
+        "use strict";
+
+        /** 6**
+        Дополнительное задание, самостоятельно ознакомиться с методами объекта
+Array, как применять методы. Сдавать это задание не нужно, важно чтоб вы понимали
+как работают методы, чтобы для вас не было неожиданностью встретить эти методы
+где-либо. Некоторыми из них мы будем пользоваться на занятиях. Необходимо
+прочитать сводку, синтаксис, описание и примеры каждого метода.
+
+ПРИМЕРЫ КАЖДОГО МЕТОДА:
+        */
+
+        let arr = [
+            [2, 4, 6],
+            [1, 5, 10],
+            [7, 4, 1],
+        ];
+
+/** 1. Итерирование по массиву */
+        
+        let first = arr[0];
+        console.log(first);
+        // [2, 4, 6]
+
+        let last = arr[arr.length - 1];
+        console.log(last);
+        // [7, 4, 1]
+
+/** 2. Итерирование по массиву */
+
+        arr.forEach(function(item, index, array) {
+        console.log(item, index);
+        });
+        // [2, 4, 6] 0
+        // [1, 5, 10] 1
+        // [7, 4, 1] 2
+
+/** 3. Добавление элемента в конец массива */
+
+        let newLength = arr.push([21, 20]);
+        console.log(arr);
+        /*[
+            [2, 4, 6],
+            [1, 5, 10],
+            [7, 4, 1],
+            [1]
+          ];*/
+
+/** 4. Удаление последнего элемента массива */
+
+       last = arr.pop(); // удалим  (из конца)
+       console.log(arr);
+       /*[
+           [2, 4, 6],
+           [1, 5, 10],
+           [7, 4, 1],
+       ];*/
+
+/** 5. Удаление первого элемента массива */
+    first = arr.shift(); // удалим из начала строку
+    console.log(arr);
+    /*[
+        [1, 5, 10],
+        [7, 4, 1],
+    ];*/
+
+/** 6. Добавление элемента в начало массива */
+    newLength = arr.unshift([2, 4, 6]) // добавляет в начало
+    console.log(arr);
+    /*[
+        [2, 4, 6],
+        [1, 5, 10],
+        [7, 4, 1],
+       ];*/
+
+/** 7. Поиск номера элемента в массиве */
+
+    let pos = arr.indexOf([1, 5, 10]);
+    console.log(arr.indexOf([1, 5, 10]));
+    //0
+    let pos1 = arr.indexOf(5);
+    console.log(pos1);
+    //0.2
+
+/** 8. Удаление элемента с определённым индексом */
+    let removedItem = arr.splice(pos, 1); // так можно удалить элемент
+    console.log(arr); 
+    /*    /*[
+        [1, 5, 10],
+        [7, 4, 1],
+       ];*/
+    console.log(removedItem);          
+        // [2, 4, 6]
+
+/** 9. Удаление нескольких элементов, начиная с определённого индекса */
+    let vegetables = [
+            [2, 4, 6],
+            [1, 5, 10],
+            [7, 4, 1],
+            [1, 0, 0]
+        ];
+    console.log(vegetables); 
+
+    pos = 1;
+    let n = 2;
+
+    let removedItems = vegetables.splice(pos, n); 
+    // так можно удалить элементы, n определяет количество элементов для удаления,
+    // начиная с позиции(pos) и далее в направлении конца массива.
+
+    console.log(vegetables); 
+    /* [
+        [2, 4, 6],
+        [1, 0, 0]
+        ]; (исходный массив изменён)
+    */
+
+    console.log(removedItems); 
+    /* [
+        [1, 5, 10],
+        [7, 4, 1],
+        ]
+    */
+
+/** 10. Создание копии массива */
+
+    let shallowCopy = arr.slice(); // так можно создать копию массива
+    console.log(removedItems); 
+    /*[
+        [1, 5, 10],
+        [7, 4, 1],
+    ]
+    */
+
+let massiv = ['odin', 'dva', 'tree'];
+console.log(massiv.pop());
+//УДАЛЯЕТ ЭЛЕМ В КОНЦЕ МАССИВА
+console.log(massiv);
+console.log(massiv.push('tree'));
+//ДОБАВЛЯЕТ ЭЛЕМЕНТ В КОНЕЦ МАССИВА
+console.log(massiv);
+console.log(massiv.reverse());
+console.log(massiv.includes('tree'));
+//ПРОВЕРЯЕТ НАЛИЧИЕ ЭЛЕМЕНТА В МАССИВЕ
+console.log(massiv.join());
+console.log(massiv);
+console.log(massiv.toString());
+console.log(massiv);
+console.log(massiv.indexOf('dva'));
+//ВОЗВРАЩАЕТ ИНДЕКС ЭЛЕМЕНТА
+console.log(massiv.push('tree'));
+console.log(massiv);
+console.log(massiv.lastIndexOf('tree'));
+console.log(massiv.reverse());
+console.log(massiv.shift());
+//УДАЛЯЕТ ЭЛЕМЕНТ В НАЧАЛЕ МАССИВЕ
+console.log(massiv);
+
+
+//МЕТОДЫ
+
+/* 1 forEach()
+Вызывает функцию для КАЖДОГО элемента в массиве*/
+
+massiv.forEach(function(element) {
+  console.log(element + '1');
+});
+
+//odin1
+//dva1
+//tree1
+
+/* 6 Метод map() создаёт НОВЫЙ МАССИВ с результатом вызова указанной
+ функции для каждого элемента массива.*/Array
+
+ let newMassiv = massiv.map(function(x){
+    return x + '2';
+});
+ console.log(newMassiv);
+ //["odin2", "dva2", "tree2"]
+
+/* 2  метод entries() Возвращает новый объект итератора массива 
+Array Iterator, содержащий пары ключ / значение 
+для каждого индекса в массиве. Возвращает поочередно 
+индекс и элемент*/
+
+let eArr = massiv.entries();
+
+console.log(eArr.next().value); 
+console.log(eArr.next().value); 
+console.log(eArr.next().value); 
+
+// [0, "odin"]
+// [1, "dva"]
+// [2, "tree"]
+
+/* 3 Метод some() проверяет, удовлетворяет ли КАКОЙ-ЛИБО  
+элемент массива условию, заданному в передаваемой функции. 
+Возвращает булево значение*/
+
+function isTree(element) {
+    return element =  'tree';
+}
+console.log(massiv.some(isTree)); 
+console.log(massiv);
+//true
+
+/* 4 Метод filter() создаёт НОВЫЙ МАССИВ со всеми элементами, 
+прошедшими проверку, задаваемую в передаваемой функции.*/
+
+const result = massiv.filter(word => word.length > 3);
+console.log(result);
+
+//["odin", "tree"]
+
+
+/* 5 Метод find() возвращает значение ПЕРВОГО найденного
+в массиве элемента, которое удовлетворяет условию переданному
+в callback функции.  В противном случае возвращается undefined.*/
+
+const result2 = massiv.find(word => word.length <= 3);
+console.log(result2);
+
+//["dva"]
+
+/* 6 Метод map() создаёт НОВЫЙ МАССИВ с результатом вызова указанной
+ функции для каждого элемента массива.*/Array
+
+ let newMassiv = massiv.map(function(x){
+    return x + '2';
+});
+ console.log(newMassiv);
+ //["odin2", "dva2", "tree2"]
+
+/* 7 Метод splice() изменяет содержимое массива,
+удаляя существующие элементы и/или добавляя новые.*/
+
+/* 8 Метод sort() на месте сортирует элементы массива и 
+устойчива (англ.). Порядок cортировки
+ по умолчанию соответствует порядку кодовых точек Unicode.*/
+
+/* 9 Метод slice() возвращает новый массив, 
+содержащий копию части исходного массива.*/
+
+/* 10 Метод Array.isArray() возвращает true, если объект
+ является массивом и false, если он массивом не является.*/
+
+ 
+
+
+
+    </script>
+</body>
+
+</html>
