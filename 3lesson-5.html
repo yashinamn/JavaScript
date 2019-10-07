@@ -25,50 +25,44 @@
             [2, 4, 6],
             [1, 5, 10],
             [7, 4, 1],
+            [10, 20, 5],
         ];
 
+        /**функция возвращает сумму элементов массива;
+         * @param {Array} принимает массив;
+         * @returns {number};
+         */
         function sumArr(array) {
             let sumArray = 0;
-            for (let i = 0;  i < array.length; sumArray = sumArray + array[i], i++ );
+            for (let i = 0; i < array.length; sumArray += array[i], i++);
             return sumArray;
         }
 
-        function findMaxArray(arr1, arr2, arr3) {
-            if ((sumArr(arr1) > sumArr(arr2)) && (sumArr(arr1) > sumArr(arr3))) {
-                return arr1;
-            } else if ((sumArr(arr1) > sumArr(arr2)) && (sumArr(arr1) < sumArr(arr3))) {
-                return arr3;
-            } else {
-                return arr2;
+        /** Предположим что индекс массива с максимальной суммой элементов это 0*/
+        let maxArrayIndex = 0;
+        /** Зададим переменную максимальной суммы элементов массива 
+        и присвоим ей значение возвращаемое функцией расчета суммы элементов первого массива*/
+        let maxArray = sumArr(arr[maxArrayIndex]);
+        /** запустим цикл проверки всех массивов на максимальность суммы элементов массива*/
+        for (let j = 1; j < arr.length; j++) {
+            const sumOfElements = sumArr(arr[j]);
+            if (sumOfElements > maxArray) {
+                maxArray = sumOfElements;
+                maxArrayIndex = j;
             }
         }
 
-        function minElemArray(array) {
-            if (array[0] < array[1] && array[0] < array[2]) {
-                return array[0];
-            } else if (array[0] < array[1] && array[0] > array[2]) {
-                return array[2];
-            } else {
-                return array[1];
+        /** Предположим что элемент с нуулевым индексом это минимальный элемент массива*/
+        let minElemArray = arr[maxArrayIndex][0];
+        /** запустим цикл проверки всех жлементов массива на минимальность*/
+        for (let l = 1; l < arr[maxArrayIndex].length; l++) {
+            if (arr[maxArrayIndex][l] < minElemArray) {
+                minElemArray = arr[maxArrayIndex][l];
             }
         }
 
-let maxArray = findMaxArray(arr[0], arr[1], arr[2]);
-let minElemMaxArr = minElemArray(maxArray);
-
-        console.log(`массив, у которого сумма всех чисел максимальна ${maxArray}`);
-        console.log(`минимальный элемент этого массива ${minElemMaxArr}`);
-        
-
-
-      /*const sumArr1 = sumArr(arr[0]);
-        const sumArr2 = sumArr(arr[1]);
-        const sumArr3 = sumArr(arr[2]);
-
-        console.log(sumArr1);
-        console.log(sumArr2);
-        console.log(sumArr3);*/
-        
+        console.log(`индекс массива сумма элементов которого максимальна равен ${maxArrayIndex}`)
+        console.log(`минимальное значение вышенуказанного массива ${minElemArray}`);
     </script>
 </body>
 
