@@ -30,8 +30,16 @@
 
             move(direction) {
                 switch (direction) {
+                    case 1:
+                        this.y++;
+                        this.x--;
+                        break;
                     case 2:
                         this.y++;
+                        break;
+                    case 3:
+                        this.y++;
+                        this.x++;
                         break;
                     case 4:
                         this.x--;
@@ -39,8 +47,17 @@
                     case 6:
                         this.x++;
                         break;
+                    case 7:
+                        this.y--;
+                        this.x--;
+                        break;
                     case 8:
                         this.y--;
+                        break;
+                    case 9:
+                        this.y--;
+                        this.x++;
+                        break;
                 }
             }
         }
@@ -84,11 +101,11 @@
             },
 
             getDirection() {
-                const avalabelDirections = [-1, 2, 4, 6, 8];
+                const avalabelDirections = [-1, 2, 1, 4, 7, 8, 9, 6, 3];
 
                 while (true) {
                     const direction = parseInt(prompt(
-                    'введите число, куда Вы хотите переместиться, -1 для выхода'));
+                        'введите число, куда Вы хотите переместиться, -1 для выхода'));
                     if (!avalabelDirections.includes(direction)) {
                         alert(`введите одно из следующих чисел ${avalabelDirections.join(', ')}`);
                         continue;
@@ -100,7 +117,6 @@
         }
 
         game.run();
-
     </script>
 </body>
 
