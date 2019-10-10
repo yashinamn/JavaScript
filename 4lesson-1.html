@@ -28,38 +28,53 @@
                 this.y = startY;
             },
 
-            move(direction) {
+            move(nextPoint) {
+                this.x = nextPoint.x;
+                this.y = nextPoint.y;
+            },
+
+            /** отдает следуюшую точку, в которой будет находиться
+             * принимает направление
+             * возвращает слудющую точку игрока
+             */
+            getNextPosition(direction) {
+                const nextPosition = {
+                    x: this.x,
+                    y: this.y,
+                };
+
                 switch (direction) {
                     case 1:
-                        this.y++;
-                        this.x--;
+                        nextPosition.y++;
+                        nextPosition.x--;
                         break;
                     case 2:
-                        this.y++;
+                        nextPosition.y++;
                         break;
                     case 3:
-                        this.y++;
-                        this.x++;
+                        nextPosition.y++;
+                        nextPosition.x++;
                         break;
                     case 4:
-                        this.x--;
+                        nextPosition.x--;
                         break;
                     case 6:
-                        this.x++;
+                        nextPosition.x++;
                         break;
                     case 7:
-                        this.y--;
-                        this.x--;
+                        nextPosition.y--;
+                        nextPosition.x--;
                         break;
                     case 8:
-                        this.y--;
+                        nextPosition.y--;
                         break;
                     case 9:
-                        this.y--;
-                        this.x++;
+                        nextPosition.y--;
+                        nextPosition.x++;
                         break;
                 }
-            }
+                return nextPosition;
+            },
         }
 
         const game = {
@@ -71,6 +86,7 @@
 
                 while (true) {
                     this.render();
+
                     const direction = this.getDirection();
 
                     if (direction === -1) {
@@ -78,7 +94,12 @@
                         return;
                     }
 
-                    this.player.move(direction);
+                    const nextPoint = this.player.getNextPosition(direction);
+
+                    if (this.canPlayerMakeStep(nextPoint)) {
+                        //Двигаем игрока
+                        this.player.move(nextPoint);
+                    }
                 }
             },
 
@@ -114,7 +135,20 @@
                 }
             },
 
-        }
+            /**
+             * проверяет может ли пользователь сделать шаг на точку
+             * @param {{x: int, y: int}}принимаем некст поинт, точку
+             * @returns {boolean} true если пользователь может пройти   false возвращаем правду или ложь
+             * */
+            canPlayerMakeStep(nextPoint) {
+                if (nextPoint.x < this.settings.colsCount && nextPoint.x >= 0 && nextPoint.y < this.settings
+                    .rowsCount && nextPoint.y >= 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        };
 
         game.run();
     </script>
