@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>кто хочет стать миллионером</title>
+</head>
+
+<body>
+
+
+
+    <script>
+        "use strict";
+
+        /***/
+
+        function game(question, answer, score) {
+
+            var userAnswer = prompt(question);
+            userAnswer = userAnswer.toLowerCase();
+            if (userAnswer == answer) {
+                alert('Поздравляю, Вы угадали!');
+                gameScore += score;
+                return;
+            }
+            alert('Вы ошиблись.конец игры! ');
+
+        }
+
+
+        let gameScore = 0;
+
+
+        game('кто вождь мирового пролетариата? \n Ленин \n Сталин \n Горбачев', "ленин", 10);
+
+        if (gameScore === 10) {
+            game("когда была буржуазная революция в России? \n октябрь 1917 \n февраль 1917 \n октябрь 1993", "февраль 1917", 100);
+        }
+
+        if (gameScore === 110) {
+            game("кто написал Манифест коммунистической партии? \n Энгельс \n Зюганов \n Маркс", "маркс", 200);
+        }
+
+        alert(`вы выиграли ${gameScore} рублей`);
+
+    </script>
+</body>
+
+</html>
