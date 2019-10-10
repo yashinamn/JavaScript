@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>число в объект</title>
+</head>
+
+<body>
+    <script>
+        "use strict";
+
+        3
+        /**
+        1 Написать функцию, преобразующую число в объект. Передавая на вход число в диапазоне [0,
+        999],
+        мы должны получить на выходе объект, в котором в соответствующих свойствах описаны
+        разряды числа:
+        - единицы (в свойстве firstDigit)
+        - десятки (в свойстве secondDigit)
+        - сотни (в свойстве thirdDigit)
+        Например, для числа 45 мы должны получить следующий объект:
+        ```
+        {
+        firstDigit: 5,
+        secondDigit: 4,
+        thirdDigit: 0,
+        }*/
+
+        //создадим переменную, введем число от 0 до 999
+        const number = +prompt(`Введём число от 0 до 999`);
+
+        /**
+         *функция, преобразующую число в объект.
+         *@param number чиcло от 0 до 999
+         *@return object*/
+
+        function getDigitsOfNumber(num) {
+            //создадим проверку числа на валидность
+            if (!Number.isInteger(num) || num < 0 || num > 999) {
+                console.log("значение аргумента должно быть целым числом в промежутке от 0 до 999");
+                return {};
+            }
+
+            //создадим пустой объект
+            const digitOfNumber = {};
+
+            //зададим свойство объекту (количество единиц в числе)
+            digitOfNumber.firstDigit = num % 10;
+
+            //зададим свойство объекту (количество десятков в числе)
+            digitOfNumber.secondDigit = Math.floor((num % 100) / 10);
+
+            //зададим свойство объекту (количество сотен в числе)
+            digitOfNumber.thirdDigit = Math.floor(num / 100);
+
+            //вернем объект
+            return digitOfNumber;
+        }
+
+        //выведем объект в консоль
+        console.log(getDigitsOfNumber(number));
+    </script>
+</body>
+
+</html>
