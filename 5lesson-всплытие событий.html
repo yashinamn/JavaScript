@@ -29,18 +29,41 @@
 
 <body>
     <div id="myDiv">
-    Тег div
-    <section id="mySection">
-        Тег section
-        <p id="myP">
-            Тег p
-        </p>
-    </section>
+        Тег div
+        <section id="mySection">
+            Тег section
+            <p id="myP">
+                Тег p
+            </p>
+        </section>
     </div>
 
     <script>
         "use strict";
+
+        const elements = document.querySelectorAll('#myDiv, #mySection,  #myP');//создаем коллекцию всех тэгов с указанными айди
+        console.log(elements);//выводим коллекцию в консоль
+        /* функция выводит в алерт название тега, по которому произошет клик
+        принимает событие, куда произошел клик мыши
+        */
+        const handler = function (event) {
+            event.stopPropagation(); //!!запрещает "всплывание" родительского тега!!! но разрешает следующую функцию
+            //event.stopImmediatlyPropagation(); //запрещает "всплывание" родительского тега !И следующую функцию!
+            const tagName = event.target.tagName;//согдаем переменную с именем тэга, на который был клик
+            alert(`Событие происходит в теге: ${tagName}`);//алерт с тэгом/элементом по которому произошел клик
+        };
+        for (const element of elements) {//цикл для каждого элемента/тега в коллекции
+            element.addEventListener('click', handler);//добавление слушателя события на кажд элемент и запуск функции
+            // element.addEventListener('click', handler, true); работает " на погружение"
+        }
     </script>
+    <a href="https://www.google.ru/">Google</a>
+    <script>
+        document.querySelector('a').addEventListener('click', function (event) {
+                event.preventDefault();//отменяет действия браузера "по умолчанию". например переход по ссылке гугл
+            }); // часто используется для неотправки неправильно заполненных форм
+    </script>
+
 </body>
 
 </html>
