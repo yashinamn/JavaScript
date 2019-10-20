@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>работа с атрибутами</title>
+</head>
+
+<body>
+
+    <button class="buyBtn a1 a2" data-price="15000000">Купить Ferrari</button>
+    <button class="buyBtn" data-price="12000000">Купить Maserati</button>
+
+
+    <script>
+        "use strict";
+// классные вещи classList и dataset!!!
+       const button = document.querySelector('.buyBtn'); //находим первый элемент с этим классом
+       console.log(button.classList); // вывести коллекцию всех классов элемента
+       button.classList.remove('a1'); // удаляем класс
+       button.classList.add('classFromJS'); //добавляем класс
+       button.classList.toggle('classFromJS123'); //если класс есть, то он его удаляет, если нет, то добавляет
+       console.log(button.classList.contains('classFromJS')); //содержит ли элемент данный класс 'classFromJS'
+       console.log(button.dataset); //dataset! выводим пользовательские настройки
+       console.log(button.dataset.price); //выводим значение пользовательского атрибутф data-price
+       button.dataset.name = 'Dragon'; //добавляем новый пользовательский атрибут  data-name
+       button.dataset.price = 20000000; // присваиваем новое значение атрибуту data-price
+       button.addEventListener('click', event => { //добавляем слушателя события клик
+           const price = event.target.dataset.price; //задаем переменную со значением атрибута прайс
+           alert(`цена за авто ${price} р. Уверен что есть такие деньги?`); // алерт цены и текста
+       })
+       console.log(button.classList); // вывести коллекцию всех классов элемента
+       button.setAttribute('data-manufacturer', 'Ferrari s.p.a'); // устанавливаем новый пользовательский атрибут
+       console.log(button.getAttribute('data-price'));       //вывдим значение атрубута
+       const buttons = document.querySelectorAll('.buyBtn'); // выводим коллекцию всех классов
+       
+       for (const but of buttons){ // цикл для всех элементов с классом '.buyBtn'
+           but.removeAttribute('data-price') //удаляем атрибут
+       }
+       console.log(button.classList); // вывести коллекцию всех классов элемента
+
+    </script>
+</body>
+
+</html>
