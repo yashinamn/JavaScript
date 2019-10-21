@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>умное использование событий</title>
+</head>
+
+<body>
+<div class="wrap">
+    <p>Товар 1</p>
+    <button data-price="500">Кнопка 1</button>
+
+    <p>Товар 2</p>
+    <button data-price="500">Кнопка 2</button>
+
+    <p>Товар 3</p>
+    <button data-price="500">Кнопка 3</button>
+</div>
+
+
+
+    <script>
+        "use strict";
+
+        /** функция для обработчика событий
+         */
+        
+        function myFunc() {
+            console.log("что-то делаем");
+            }
+        
+        const elems = document.querySelectorAll('button'); // получаем коллекцию тегov button
+        for (const elem of elems) {
+            elem.addEventListener('click', myFunc); 
+        }     
+
+    </script>
+</body>
+
+</html>
