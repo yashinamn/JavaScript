@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>умное использование событий</title>
+</head>
+
+<body>
+<div class="wrap">
+    <p>Товар 1</p>
+    <button data-price="500">Кнопка 1</button>
+
+    <p>Товар 2</p>
+    <button data-price="1000">Кнопка 2</button>
+
+    <p>Товар 3</p>
+    <button data-price="1500">Кнопка 3</button>
+
+</div>
+
+
+
+    <script>
+        "use strict";
+   
+        document.querySelector('.wrap').addEventListener('click', event => {//сначала ставим слушателя на весь родительский тэг див, который по клику вызывает функцию ивент
+            if (event.target.tagName !== 'BUTTON') {//ставим условия если кликнули Не по  тэгу button, то
+                return;//выходим из функции
+            } 
+                const price = event.target.dataset.price;//создадим переменную в которую положим значение атрибута data-price
+                console.log(`стоимость товара по данной кнопке: ${price}`);
+        });
+
+
+    </script>
+</body>
+
+</html>
