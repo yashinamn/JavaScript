@@ -23,11 +23,13 @@ body {
 
 .my-form {
   margin: 0 auto;
+
 }
 
 .form-row {
   display: flex;
   justify-content: space-around;
+  
 }
 
 .form-control {
@@ -36,6 +38,7 @@ body {
   padding: 10px;
   border-radius: 10px;
   border: 1px solid grey;
+  font-family:'Montserrat', sans-serif;
 }
 
 .is-invalid {
@@ -46,6 +49,11 @@ body {
   border: 2px solid green;
 }
 
+.invalid-feedback {
+  font-size: 0.7em;
+  padding-left: 20px;
+}
+
 .button {
   margin: 20px auto;
   padding: 10px 30px;
@@ -54,4 +62,5 @@ body {
   color: white;
   border: none;
   display: block;
+  font-family:'Montserrat', sans-serif;
 }
