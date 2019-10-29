@@ -15,12 +15,10 @@
 проверка провалилась.
  */
 
-/**
- * Объект, содержащий методы для валидации
- */
+/** Объект, содержащий методы для валидации */
+
 const validationMethods = {
-  /**
-   * метод Проверка поля по длине.
+  /**метод Проверка поля по длине. 
    * @param {Element} fields Поле, которое надо проверить(input)
    * @param {Array} args Массив с аргументами - условия валидации(то есть длина вводимого значения и оператор (больше, меньше, равно))
    * @returns {string/null} Строку с ошибкой или null , если ошибок не было
@@ -61,109 +59,92 @@ const validationMethods = {
     }
     return message; //возвращаем значение сообщения
   },
-  /**
-   * Метод Проверяет содержит ли поле толко цифры.(для телефона)
+
+  /**Метод Проверяет содержит ли поле телефона только цифры. 
    * @param {Element} fields Поле, которое надо проверить
    * @returns {string/null} Строку с ошибкой или null , если ошибок не было
    */
   mustContainsNumber(field) {
     for (const val of field.value) { //проверяем каждый введеный знак на соответствие его цифре
-      if (!isInteger(Number.parseInt(val))) { //превращаем каждый знак в число и проверяем
+      if (!Number.isInteger(Number.parseInt(val))) { //превращаем каждый знак в число и проверяем
         return `Номер должен содержать только цифры`;
       }
     }
     return null;
   },
-  /**
-   * Метод проверяет совпадают ли у двух полей значения(для повтора пароля)
+
+  /**Метод проверяет совпадают ли у двух полей значения(для повтора пароля)
    * @param {Element} fields Поле, которое надо проверить
    * @param {Array} args Массив с аргументами
    * @returns {string/null} Строку с ошибкой или null , если ошибок не было
    */
   fieldsCompare(field, args) { //сверяет значение поля Повторите пароль со значение поля Пароль
-    return field.value !== document.querySelector(args[0]).value ? `Поля не совпадают` : null; //???
+    return field.value !== document.querySelector(args[0]).value ? `Поля не совпадают` : null; //
   },
-}
+};
 
-/**
- * Объект формы
- */
+/**Объект формы */
+ 
 const form = {
   formEl: null,
   rules: null,
-  /**
-   * Инициализация формы
+  /**Инициализация формы
    */
   init() {
-    this.formEl = document.querySelector('.my-form'); //определяем элемент формы по классу
+    this.formEl = document.querySelector('.my-form'); //получаем элемент формы по классу
     this.formEl.addEventListener('submit', e => this.formSubmit(e)); // добавляем этому элементу слушателя события submit который вызывает функцию отправки формы после пройденной валидации
     //правила для каждого поля input. Каждое правило это объект
-    this.rules = [{ //провала проверки валидации
+    this.rules = [//правила проверки валидации
+      { 
         selector: 'input[name="name"]', // поле Имя
-        methods: [{
-            name: 'length', // вызывает функцию проверки длины
-            args: ['>=', 1], //какая именно длина должна быть
-          },
-          {
-            name: 'length', // вызывает функцию проверки длины
-            args: ['<=', 50], //какая именно длина должна быть
-          },
+        methods: [ 
+          {name: 'length', args: ['>=', 1]}, // вызывает функцию проверки длины//какая именно длина должна быть
+          {name: 'length', args: ['<=', 50]},// вызывает функцию проверки длины//какая именно длина должна быть
         ],
       },
       {
         selector: 'input[name="phone"]', // поле Телефон
-        methods: [{
-            name: 'mustContainsNumber' // вызывает функцию проверки на цифры
-          },
-          {
-            name: 'length', // вызывает функцию проверки длины
-            args: ['==', 11] // какая именно длина должна быть
-          },
+        methods: [
+          {name: 'mustContainsNumber'},// вызывает функцию проверки на цифры
+          {name: 'length', args: ['==', 11]},// вызывает функцию проверки длины // какая именно длина должна быть
         ],
       },
       {
         selector: 'input[name="password"]', //поле Пароль
-        methods: [{
-            name: 'length', // вызывает функцию проверки длины 
-            args: ['>=', 5], // какая именно длина должна быть
-          },
-          {
-            name: 'length', // вызывает функцию проверки длины
-            args: ['<=', 50], // какая именно длина должна быть
-          },
+        methods: [
+          {name: 'length', args: ['>=', 5]},// вызывает функцию проверки длины  // какая именно длина должна быть
+          {name: 'length', args: ['<=', 50]},// вызывает функцию проверки длины // какая именно длина должна быть  
         ],
       },
       {
         selector: 'input[name="password-repeat"]', // поле повторить пароль
-        methods: [{
-          name: 'fieldsCompare', //вызывает функцию проверки идентичности паролей
-          args: ['input[name="password"]'], //значение поля Пароль
-        }, ],
+        methods: [
+          {name: 'fieldsCompare', args: ['input[name="password"]']},//вызывает функцию проверки идентичности паролей //значение поля Пароль 
+         ],
       },
     ];
   },
 
-  /**
-   * Метод, который запускаетсяперед отправкой формы
+  /**Метод, который запускаетсяперед отправкой формы
    * @param {event} e Событие отправки формы
    */
   formSubmit(e) {
-    if (!this.validate()) {
-      e.preventDefault(); //останавливаем отправку формы по умолчанию
+    if (!this.validate()) {//если форма не валидна
+      e.preventDefault(); //прерываем отправку формы по умолчанию
     }
   },
-  /**
-   * Метод Проверяет валидность заполненной формы(запишем отдельно ПРАВИЛА отдель МЕТОДЫ)
+ 
+  /**Метод валидирует форму (запишем отдельно ПРАВИЛА отдель МЕТОДЫ)
    * @param правила валидации
    */
   validate() {
     let isValid = true; //определяем валидность формы по умолчанию
-    for (let rule of this.rules) { //для каждого правили из правил валидции
+    for (let rule of this.rules) { //для каждого правила из правил валидции
       const inputEl = document.querySelector(rule.selector); //находим по селектору из правил конкретное поле
       for (let method of rule.methods) { //для каждого метода из методов вышеуказанного правила
         const validFunction = validationMethods[method.name]; //создаем функцию из объекта методов валидации(length, mustContainsNumber, fieldsCompare)
         const errMessage = validFunction(inputEl, method.args); // создаем переменную сообщения, в которую кладем функцию с аргуметами в виде поля и аргументов из праивил
-        if (errMessage) { //если функция дает строку
+        if (errMessage) { //если функция дает строку шибки
           this.setInvalidField(inputEl, errMessage); //ставим класс инвалид и выводим ошибочное сообщение
           isValid = false;
           break;
@@ -203,7 +184,12 @@ const form = {
     const cl = inputEl.classList; // коллекция классов у элемента инпут
     cl.remove('is-invalid'); //удаляем ИНвалидный клаcс если такой был
     cl.add('is-valid'); //добавляем класс валидный
-  }
+
+    let hintWrap = inputEl.parentNode.querySelector('.invalid-feedback');
+    if (hintWrap) { // если такой элемент есть, то
+      inputEl.parentNode.removeChild(hintWrap); //удаляем ребенка в родительском элементе инпута
+    }
+  },
 };
 
 form.init();
