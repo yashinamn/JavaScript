@@ -11,10 +11,15 @@ const gallery = {
         opennedImageRightButtonClass: 'maxGalleryWrapper__right', //класс картинки, кнопки вправо
         opennedImageNextButtonSrc: 'images/gallery/next.png', //путь до картинки, кнопки "предыдущее/следующее фото"
         dummyImageSrc: 'img/duck.jpg',
+        openedImageEl: null,
+        allImages: [],
+        miniImageSelector: '.miniPhoto',
     },
 /**инициализация */
     init(userSettings = {}) {
         Object.assign(this.settings, userSettings); //добавляем в настройки свои уникальные классы и пути до картинок-кнопок
+        this.settings.allImages = document.querySelectorAll(this.settings.miniImageSelector);
+        console.log(this.settings.allImages);
         
         document
         .querySelector(this.settings.previewSelector)//находим тег див в котором лежат миниатюры
@@ -24,13 +29,51 @@ const gallery = {
     containerClickHandler(event) {
         if (event.target.tagName !== 'IMG') {//если клик был не по картинке, то выходим
             return;
-        }   
+        }  
+        
+        this.settings.openedImageEl = event.target;
+        console.log(this.settings.openedImageEl);
+        
         this.openImage(event.target.dataset.ful_img_src);         
     },
 /**открывает картинку */
     openImage(src) {
         const image = this.getScreenContainer().querySelector(`.${this.settings.opennedImageClass}`);
         image.src = src;
+        
+    },
+/**открывает следующее фото 
+* Возвращает следующий элемент (картинку) от открытой или первую картинку в контейнере,
+* если текущая открытая картинка последняя.
+* @returns {Element} Следующую картинку от текущей открытой.
+*/
+    getNextImage() {
+        const firstImageSrc = this.settings.allImages[0].dataset.ful_img_src;
+        if (this.settings.openedImageEl.nextElementSibling) {
+            const nextImageSrc = this.settings.openedImageEl.nextElementSibling.dataset.ful_img_src;
+            this.openImage(nextImageSrc);
+            this.settings.openedImageEl = this.settings.openedImageEl.nextElementSibling;
+        } else {
+            this.openImage(firstImageSrc);
+            this.settings.openedImageEl = this.settings.allImages[0];
+        }
+    },
+/**открывает предыдущее фото 
+* Возвращает предыдущий элемент (картинку) от открытой или последнюю картинку в контейнере,
+* если текущая открытая картинка первая.
+* @returns {Element} Предыдущую картинку от текущей открытой.
+*/
+    getPrevImage() {
+        const lastImageSrc = this.settings.allImages[this.settings.allImages.length - 1].dataset.ful_img_src;
+        if (this.settings.openedImageEl.previousElementSibling) {
+            const previousImageSrc = this.settings.openedImageEl.previousElementSibling.dataset.ful_img_src;
+            this.openImage(previousImageSrc);
+            this.settings.openedImageEl = this.settings.openedImageEl.previousElementSibling;
+        } else {
+            this.openImage(lastImageSrc);
+            this.settings.openedImageEl = this.settings.allImages[this.settings.allImages.length - 1];
+        }
+
     },
 /**находит и отдает новый контейнер, к котором будет открываться полная картинка */
     getScreenContainer() {
@@ -59,13 +102,13 @@ const gallery = {
         const leftImageElement = document.createElement('img');//создаем оболочку для картинки-кнопки-влево 
         leftImageElement.classList.add(this.settings.opennedImageLeftButtonClass);//добавляем ей класс из настроек
         leftImageElement.src = this.settings.opennedImageNextButtonSrc;//присваиваем ей путь из настроек
-        leftImageElement.addEventListener('click', () => this.left());//добавляем слушателя событий
+        leftImageElement.addEventListener('click', () => this.getPrevImage());//добавляем слушателя событий
         galleryWrapperElement.appendChild(leftImageElement);//добавляем картинку-кнопку в див
 
         const rightImageElement = document.createElement('img');//создаем оболочку для картинки-кнопки-влево 
         rightImageElement.classList.add(this.settings.opennedImageRightButtonClass);//добавляем ей класс из настроек
         rightImageElement.src = this.settings.opennedImageNextButtonSrc;//присваиваем ей путь из настроек
-        rightImageElement.addEventListener('click', () => this.right());//добавляем слушателя событий
+        rightImageElement.addEventListener('click', () => this.getNextImage());//добавляем слушателя событий
         galleryWrapperElement.appendChild(rightImageElement);//добавляем картинку-кнопку в див
         
         document.body.appendChild(galleryWrapperElement);//добавляем див в тело документа в конец
@@ -77,16 +120,6 @@ const gallery = {
         document.querySelector(`.${this.settings.openedImageWrapperClass}`).remove();//удаляем весь блок
     },
 
-    right() {
-        //const image = document.querySelector(`.${this.settings.opennedImageClass}`);
-        //image.src = image.dataset.next_ful_img_src;
-        
-    },
 
-    /*left() {
-        this.openImage(event.target.dataset.prev_ful_img_src);
-        console.log(event.target.dataset.prev_ful_img_src);
-        
-    },*/
     
 }
