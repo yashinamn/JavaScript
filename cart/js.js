@@ -38,9 +38,7 @@ const basket = {
     /** Отображает количество всех товаров и их цену.
     */
     render() {
-        const name = event.target.dataset.name;       //наименование
-        const price = event.target.dataset.price;     //цена
-        this.add(name, price);                        //добавь цену и названия товара в массив товаров, который отправляем в корзину
+        this.add(event.target.dataset.name, event.target.dataset.price); //добавь цену и названия товара в массив товаров, которыe отправляем в корзину
         this.priceEl.textContent = `${this.getGoodsPrice()} руб`;//заполняем строку суммы
         this.countEl.textContent = this.goods.length;//заполняем строку количества
     },
@@ -49,8 +47,7 @@ const basket = {
     * @returns {number} Цену всех купленных товаров.
     */
     getGoodsPrice() {
-        const sum = 0;
-        return this.goods.reduce((accumulator, currentValue) => accumulator + currentValue.price, sum);
+        return this.goods.reduce((sum, val) => sum + val.price, 0);
     },
 
     /**Добавляет купленный товар в массив купленных товаров и отображает количество и цену всех
