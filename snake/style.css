@@ -24,7 +24,7 @@
     display: flex;
     justify-content: center;
 }
-td.cell {
+td.cell  {
     width: 20px;
     height: 20px;
     border: 1px dotted #eee;
