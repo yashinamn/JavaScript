@@ -52,7 +52,7 @@ const config = {
 /**карта */
 const map = {  
     cell: null,//ячейки
-    usedCells: null,//заполненные ячейки
+    usedCells: null,//заполненные ячейки массив
     /**инициализация карты */
     init(rowsCount, colsCount) {//принимает количество строк и столбцов из конфигурации
         const table = document.getElementById('game'); //находим тэг элемент игры
@@ -79,21 +79,22 @@ const map = {
     
     
     },
+    /**метод отрисовки карты рендер, принмает массив точек змейки и точку еды */
     render(snakePointsArray, foodPoint) {
-        for (const cell of this.usedCells) {
-            cell.className = 'cell';
+        for (const cell of this.usedCells) {// для всех яччек из массива заполненных
+            cell.className = 'cell';//прсваиваем класс и удаляем все другие классы
         }
-        this.usedCells = [];
+        this.usedCells = [];//массив заполненных ячеек
 
-        snakePointsArray.forEach((point, idx) => {
-            const snakeCell = this.cells[`x${point.x}_y${point.y}`];
-            snakeCell.classList.add(idx === 0 ? 'snakeHead' : 'snakeBoby');
-            this.usedCells.push(snakeCell);
+        snakePointsArray.forEach((point, idx) => {//для массива с ячейками тела змеи применяем функцию форич в которую передаем точку и индекс точки
+            const snakeCell = this.cells[`x${point.x}_y${point.y}`];//   ???
+            snakeCell.classList.add(idx === 0 ? 'snakeHead' : 'snakeBoby');//присваиваем ячейкам тела змейки класс тело змеи или голова змеи если это первый элемент массива
+            this.usedCells.push(snakeCell);//добавляем в массив заполненных ячеек ячейку с телом змейки
         });
 
-        const foodCell = this.cells[`x${foodPoint.x}_y${foodPoint.y}`];
-        foodCell.classList.add('food');
-        this.usedCells.push(foodCell);
+        const foodCell = this.cells[`x${foodPoint.x}_y${foodPoint.y}`];//   ???
+        foodCell.classList.add('food');//присваиваем ячейке еды класс фуд
+        this.usedCells.push(foodCell);//добавляем в массив заполненных ячеек ячейку с едой
 
     },
 };
@@ -109,6 +110,21 @@ const snake = {
 
     getBody() {
         return this.body;//тело змейки массив
+    },
+
+    getNextStepHeadPoint() {
+        const firstPoint = this.body[0];//точка головы на данный момент
+
+        switch (this.direction) {//получаем точку дле дальше должна оказаться голова змейки
+            case 'up'://направление вверх
+                return {x: firstPoint.x, y: firstPoint.y - 1};
+            case 'right':
+                return {x: firstPoint.x + 1, y: firstPoint.y};
+            case 'down':
+                return {x: firstPoint.x, y: firstPoint.y + 1};
+            case 'left':
+                return {x: firstPoint.x - 1, y: firstPoint.y};
+        }
     },
     
 };
@@ -131,7 +147,27 @@ const food = {
 };
 /**статус */
 const status = {
+    condition: null,
 
+    setPaying() {
+        this.condition = 'playing';
+    },
+
+    setStopped() {
+        this.condition = 'stopped';
+    },
+
+    setFinished() {
+        this.condition = 'finished';
+    },
+
+    isPlaying() {
+        return this.condition === 'playing';
+    },
+
+    isStopped() {
+        return this.condition === 'stopped';
+    },  
 };
 /**игра */
 const game = {
@@ -140,6 +176,7 @@ const game = {
     snake,
     food,
     status,
+    tickInterval: null,
 /**инициализации игры */
     init(userSettings) {
         this.config.init(userSettings);//инициализация конфигураций с пользовательскими настройками
@@ -157,24 +194,43 @@ const game = {
         this.setEventHandlers();
         this.reset()//запускаем очистку перeд новой игрой
     },
-/**метод очистки ячеек */
+/**метод очистки ячеек игра в начальное положение */
     reset() {
         this.stop();//ставим стоп игры
         this.snake.init(this.getStartSnakeBody(), 'up');//ставим змейку в начало
         this.food.setCoordinates(this.getRandomFreeCoordinates());//еду в нач положение принимает точку случайную
         this.map.render(this.snake.getBody(), this.food.getCoordinates());//отрисовываем
     },
-
+/**установка статуса игры */
     play() {
-
+        this.status.setPaying();//устанавливаем статус играем
+        this.tickInterval = setInterval(() => this.tickHandler(), 1000 / this.config.getSpeed());//ставим интервал
+        this.setPlayButton('Стоп');//устанавливаем на кнопку слово "стоп"
     }, 
-
+/**установка статуса остановки игры */
     stop() {
-
+        this.status.setStopped();
+        clearInterval(this.tickInterval);
+        this.setPlayButton('Старт');//устанавливаем на кнопку слово "старт"
     },
-
+/**установка статуса окончания игры */
     finish() {
-
+        this.status.setFinished();
+        clearInterval(this.tickInterval);
+        this.setPlayButton('Игра завершена', true);//устанавливаем на кнопку слова "Игра завершена"
+    },
+/**Обработчик тика */
+    tickHandler() {
+        if  (!canMakeStep()) {
+            return this.finish();
+        } 
+        this.snake.makeStep();
+    },
+/**Метод меняет текст кнопку игры */
+    setPlayButton(textContent, isDisabled = false) {//передаем текст и надо ли кнопку сделать серой
+        const playButton = document.getElementById('playButton');//находим кнопку
+        playButton.textContent = textContent;//ставим ей текст
+        isDisabled ? playButton.classList.add('disabled') : playButton.classList.remove('disabled');//если надо ее сделать серой, то ставим класс дисэйблед, иначе убираем этот класс 
     },
 /**метод ставит змейку на старт */
     getStartSnakeBody() {
@@ -193,14 +249,54 @@ const game = {
                 y: Math.floor(Math.random() * this.config.getRowsCount()),//округляем случайное число
             };
 
-            if (!exclude.some(exPoint => rndPoint.x === exPoint.x && rndPoint.y === exPoint.y)) {
-                return rndPoint;
+            if (!exclude.some(exPoint => rndPoint.x === exPoint.x && rndPoint.y === exPoint.y)) {//условие если в массиве заполненных точек нет нашей случайной точки
+                return rndPoint;//то возвращаем эту точку
             }
         }
     },
 
     setEventHandlers() {//ставим обработчик события
+      //кнопка игры
+      document.getElementById('playButton').addEventListener('click', () => this.playClickHandler());  
+      //кнопка новой игры
+      document.getElementById('newGameButton').addEventListener('click', () => this.newGameClickHandler()); 
+      //
+      document.addEventListener('keydown', event => this.keyDownHandler(event));
+    },
 
+    playClickHandler() {
+        if (this.status.isPlaying()) {
+            this.stop();
+        } else if (this.status.isStopped()) {
+            this.play();
+        }
+    },
+
+    newGameClickHandler() {
+        this.reset();
+    },
+
+    keyDownHandler(event) {
+
+    },
+/**метод определяющий можно ли сделать след шаг */
+    canMakeStep() {
+       const nextHeadPoint = this.snake.getNextStepHeadPoint(); 
+
+       return !this.snake.isOnPoint(nextHeadPoint) &&//находться ли след точка на теле змейки
+       nextHeadPoint.x < this.config.getColsCount() &&
+       nextHeadPoint.y < this.config.getRowsCount() && 
+       nextHeadPoint.x >= 0 &&
+       nextHeadPoint.y >= 0;
+    },
+    
+    isOnPoint(point) {
+        return this.body.some(snakePoint => snakePoint.x === point.x && snakePoint.y === point.y);//перебираем массив тела змейки на премет наличия в ней следующей точки
+    },
+/**метод делает шаг */
+    makeStep() {
+        this.body.unshift(this.getNextStepHeadPoint());//добавляем в массив тела змеи нвоую точку
+        this.body.pop();//удаляем последнюю точку тела змеи
     },
 };
 
