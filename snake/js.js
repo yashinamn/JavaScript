@@ -1,19 +1,52 @@
 "use strict";
-/***настройки */
+
+
+/***настройки 
+ * @property {int} rowsCount Количество строк.
+ * @property {int} colsCount Количество колонок.
+ * @property {int} speed Скорость змейки.
+ * @property {int} winLength Длина змейки для победы.
+*/
 const settings = {
     rowsCount: 21,
     colsCount: 21,
     speed: 2,
     winFoodCount: 50,
 };
-/**конфигурации */
+
+
+/**конфигурации 
+ ** Объект конфига игры, содержащий методы получения настроек и проверки этих настроек.
+ * @property {settings} settings Настройки игры.
+*/
 const config = {
     settings,
-/***инициализация конфигураций  */
+/***инициализация конфигураций  
+* Инициализация настроек игры.
+   * @param {Object} userSettings Объект с пользовательскими настройками игры.
+*/
     init(userSettings) {//принимаем пользовательские настройки
         Object.assign(this.settings, userSettings);//копируем пользовательские настройки и добавляем их в общие настройки
     },
-/**метод валидации */
+
+/**метод геттер количества строк */
+    getRowsCount() {
+        return this.settings.rowsCount;
+    },
+/**метод геттер количества столбцов */
+    getColsCount() {
+        return this.settings.colsCount;
+    },
+/**метод геттер показателя скорости */
+    getSpeed() {
+        return this.settings.speed;
+    },
+
+    getWinFoodCount() {
+        return this.settings.winFoodCount;
+    },
+
+    /**метод валидации */
     validate() {
         const result = {
             isValid: true,//свойство валидности
@@ -36,19 +69,10 @@ const config = {
         }
         return result;
     },
-/**метод геттер количества строк */
-    getRowsCount() {
-        return this.settings.rowsCount;
-    },
-/**метод геттер количества столбцов */
-    getColsCount() {
-        return this.settings.colsCount;
-    },
-/**метод геттер показателя скорости */
-    getSpeed() {
-        return this.settings.speed;
-    },
+
 };
+
+
 /**карта */
 const map = {  
     cell: null,//ячейки
@@ -88,7 +112,7 @@ const map = {
 
         snakePointsArray.forEach((point, idx) => {//для массива с ячейками тела змеи применяем функцию форич в которую передаем точку и индекс точки
             const snakeCell = this.cells[`x${point.x}_y${point.y}`];//   ???
-            snakeCell.classList.add(idx === 0 ? 'snakeHead' : 'snakeBoby');//присваиваем ячейкам тела змейки класс тело змеи или голова змеи если это первый элемент массива
+            snakeCell.classList.add(idx === 0 ? 'snakeHead' : 'snakeBody');//присваиваем ячейкам тела змейки класс тело змеи или голова змеи если это первый элемент массива
             this.usedCells.push(snakeCell);//добавляем в массив заполненных ячеек ячейку с телом змейки
         });
 
@@ -98,18 +122,26 @@ const map = {
 
     },
 };
+
+
 /***змейка */
 const snake = {
     body: null,//тело змейки
     direction: null,//направление змейки
+    lastStopDirection: null,
 /**инициализация змейки */
     init(startBody, startDirection) {//принимаем стартовое положение и направление
         this.body = startBody; //в тело змейки ставим координаты стартовое положение
         this.direction = startDirection;//в анправление ставим направление 
+        this.lastStopDirection = startDirection;
     },
 
     getBody() {
         return this.body;//тело змейки массив
+    },
+
+    getLastStepDirection() {
+        return this.lastStepDirection;
     },
 
     getNextStepHeadPoint() {
@@ -126,8 +158,32 @@ const snake = {
                 return {x: firstPoint.x - 1, y: firstPoint.y};
         }
     },
-    
+
+    isOnPoint(point) {
+        return this.body.some(snakePoint => snakePoint.x === point.x && snakePoint.y === point.y);//перебираем массив тела змейки на премет наличия в ней следующей точки
+    }, 
+
+    /**метод делает шаг */
+    makeStep() {
+        this.lastStepDirection = this.direction;
+        this.body.unshift(this.getNextStepHeadPoint());//добавляем в массив тела змеи нвоую точку
+        this.body.pop();//удаляем последнюю точку тела змеи
+    },
+
+    setDirection(direction) {
+        this.direction = direction;
+    },
+
+    growUp() {
+        const lastBodyIdx = this.body.length - 1; 
+        const lastBodyPoint = this.body[lastBodyIdx];
+        const lastBodyPointClone  = Object.assign({}, lastBodyPoint);
+        this.body.push(lastBodyPointClone);
+
+    },
 };
+
+
 /**еда */
 const food = {
     x: null,
@@ -144,7 +200,13 @@ const food = {
             this.x = point.x;
             this.y = point.y;
     },
+
+    isOnPoint(point) {
+        return point.x === this.x && point.y === this.y;
+    },
 };
+
+
 /**статус */
 const status = {
     condition: null,
@@ -169,6 +231,8 @@ const status = {
         return this.condition === 'stopped';
     },  
 };
+
+
 /**игра */
 const game = {
     config,
@@ -199,7 +263,8 @@ const game = {
         this.stop();//ставим стоп игры
         this.snake.init(this.getStartSnakeBody(), 'up');//ставим змейку в начало
         this.food.setCoordinates(this.getRandomFreeCoordinates());//еду в нач положение принимает точку случайную
-        this.map.render(this.snake.getBody(), this.food.getCoordinates());//отрисовываем
+        this.render();//отрисовываем
+        
     },
 /**установка статуса игры */
     play() {
@@ -221,10 +286,29 @@ const game = {
     },
 /**Обработчик тика */
     tickHandler() {
-        if  (!canMakeStep()) {
+        if  (!this.canMakeStep()) {
             return this.finish();
         } 
+
+        if (this.food.isOnPoint(this.snake.getNextStepHeadPoint())) {
+            this.snake.growUp();
+            this.food.setCoordinates(this.getRandomFreeCoordinates());
+
+            if (this.isGameWon()) {
+                this.finish();
+            }
+        }
+        
         this.snake.makeStep();
+        this.render();
+    },
+
+    isGameWon() {
+        return this.snake.getBody().length > this.config.getWinFoodCount();
+    },
+
+    render() {
+        this.map.render(this.snake.getBody(), this.food.getCoordinates());
     },
 /**Метод меняет текст кнопку игры */
     setPlayButton(textContent, isDisabled = false) {//передаем текст и надо ли кнопку сделать серой
@@ -277,28 +361,57 @@ const game = {
     },
 
     keyDownHandler(event) {
+       if (!this.status.isPlaying()) {
+           return;
+       }
+      
+       const direction = this.getDirectionByCode(event.code);
 
+       if (this.canSetDirection(direction)) {
+           this.snake.setDirection(direction);
+       }
+       
     },
+
+    getDirectionByCode(code) {
+        switch (code) {//код клавиши
+            case 'KeyW':
+            case 'ArrowUp':
+                return 'up';
+            case 'KeyD':
+            case 'ArrowRight':
+                return 'right';
+            case 'KeyS':
+            case 'ArrowDown':
+                return 'down';
+            case 'KeyA':
+            case 'ArrowLeft':
+                return 'left';
+            default:
+                return '';
+        }
+    },
+
 /**метод определяющий можно ли сделать след шаг */
     canMakeStep() {
        const nextHeadPoint = this.snake.getNextStepHeadPoint(); 
 
-       return !this.snake.isOnPoint(nextHeadPoint) &&//находться ли след точка на теле змейки
-       nextHeadPoint.x < this.config.getColsCount() &&
-       nextHeadPoint.y < this.config.getRowsCount() && 
-       nextHeadPoint.x >= 0 &&
-       nextHeadPoint.y >= 0;
+       return !this.snake.isOnPoint(nextHeadPoint) && // не находится ли след точка на теле змейки
+       nextHeadPoint.x < this.config.getColsCount() && //точка находится внутри поля по х
+       nextHeadPoint.y < this.config.getRowsCount() && //точка находится внутри поля по у
+       nextHeadPoint.x >= 0 && //точка находится внутри поля по х
+       nextHeadPoint.y >= 0; //точка находится внутри поля по у
     },
     
-    isOnPoint(point) {
-        return this.body.some(snakePoint => snakePoint.x === point.x && snakePoint.y === point.y);//перебираем массив тела змейки на премет наличия в ней следующей точки
+    canSetDirection(direction) {
+        const lastStepDirection = this.snake.getLastStepDirection();
+        return direction === 'up' && lastStepDirection !== 'down' ||
+        direction === 'right' && lastStepDirection !== 'left' ||
+        direction === 'down' && lastStepDirection !=='up' ||
+        direction === 'left' && lastStepDirection !== 'right' 
     },
-/**метод делает шаг */
-    makeStep() {
-        this.body.unshift(this.getNextStepHeadPoint());//добавляем в массив тела змеи нвоую точку
-        this.body.pop();//удаляем последнюю точку тела змеи
-    },
+
 };
 
 /**запуск игры */
-game.init({speed: 8});//меняем скорость на 8
+game.init({speed: 6, winFoodCount: 5});//меняем скорость на 8
